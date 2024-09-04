@@ -2,13 +2,11 @@
 
 import re #this library over here will help us by counting the sentences in the text
 from collections import Counter
-text = """he will win who knows when to figth and when not to figth.
-          he will win who knows how to handle both superior and inferior
-          forces. Move swift as the wind and closely formed as the wood.
+from collections import Counter
 
-          
-          Atack like the fire and be still as the mountain. SUN TZU
-          ART OF WAR."""
+with open('EJEMPLO.txt', 'r') as archivo:
+  text = archivo.read()
+
 words = text.split()# the split (), i used the blank space
 # between each word to separete them all
 
