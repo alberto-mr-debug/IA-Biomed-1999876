@@ -1,0 +1,43 @@
+#LINK TO COLLAB: https://colab.research.google.com/drive/1NceRB-29L31IVM7W17e782a5KEuKBr6K?usp=sharing
+#LIBRARIES
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.datasets import fetch_california_housing
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error
+# LOAD THE DATASETS
+california = fetch_california_housing()
+df = pd.DataFrame(data=california.data, columns=california.feature_names)
+df['Precio'] = california.target
+#DATA PROCESSING
+# Select the independent variable (MedInc)
+X = df[['MedInc']]  # MedInc: median income in the area
+y = df['Precio']    # Target variable: house price
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+#MODEL SELECTION AND TRAINING 
+# Create a linear regression model
+model = LinearRegression()
+
+# Train the model using the training data
+model.fit(X_train, y_train)
+#MODEL TESTING
+# Make predictions using the test data
+y_pred = model.predict(X_test)
+
+# Calculate the mean squared error
+mse = mean_squared_error(y_test, y_pred)
+
+# Print the mean squared error
+print(f'Mean Squared Error: {mse}')
+#PRINTING ZONE
+plt.figure(figsize=(10, 6))
+plt.scatter(X_test, y_test, color='blue', label='Actual Prices')
+plt.scatter(X_test, y_pred, color='red', label='Predicted Prices')
+plt.title('Actual vs Predicted House Prices')
+plt.xlabel('Median Income (MedInc)')
+plt.ylabel('House Price')
+plt.legend()
+plt.show()
