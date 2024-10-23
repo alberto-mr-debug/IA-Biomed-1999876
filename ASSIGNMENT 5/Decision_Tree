@@ -1,0 +1,50 @@
+#LINK AL COLLAB PARA PRUEBA
+#: https://colab.research.google.com/drive/167H2CCNcmnsEvuIIqELCExTSfULWV1Kv?usp=sharing
+#importacion de las librerias 
+import pandas as pd
+import numpy as np
+from sklearn.datasets import load_breast_cancer
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import accuracy_score, classification_report
+from sklearn import tree
+import matplotlib.pyplot as plt
+
+#carga de datos
+cancer_data = load_breast_cancer()
+
+
+df = pd.DataFrame(cancer_data.data, columns=cancer_data.feature_names)
+df['target'] = cancer_data.target
+
+
+print(df.head())
+
+#entrenamiento y prueba 
+X = cancer_data.data
+y = cancer_data.target
+
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+print(f'Datos de entrenamiento: {X_train.shape}')
+print(f'Datos de prueba: {X_test.shape}')
+
+#entrenamos el modelo
+model = DecisionTreeClassifier(random_state=42)
+model.fit(X_train, y_train)
+
+#aqui ya se hace lo que es las predicciones
+y_pred = model.predict(X_test)
+
+
+accuracy = accuracy_score(y_test, y_pred)
+print(f'Precisión del modelo: {accuracy:.2f}')
+
+
+print(classification_report(y_test, y_pred))
+
+#y esto ya al final es para visualizar el arbol
+plt.figure(figsize=(20,10), dpi=300)
+tree.plot_tree(model, feature_names=cancer_data.feature_names, class_names=cancer_data.target_names, filled=True)
+plt.show()
