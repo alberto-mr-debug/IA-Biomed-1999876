@@ -1,0 +1,42 @@
+#link to collab: https://colab.research.google.com/drive/1tCXW7oGBnKpf0P9hkoNuUFN3VUPIL9k6?usp=sharing
+import tensorflow as tf
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense, Dropout
+from tensorflow.keras.datasets import mnist
+from tensorflow.keras.utils import to_categorical
+
+(train_data, train_labels), (test_data, test_labels) = mnist.load_data()
+
+
+train_data = train_data.reshape(train_data.shape[0], 28, 28, 1).astype('float32') / 255
+test_data = test_data.reshape(test_data.shape[0], 28, 28, 1).astype('float32') / 255
+
+
+train_labels = to_categorical(train_labels, 10)
+test_labels = to_categorical(test_labels, 10)
+
+model = Sequential([
+    Conv2D(32, (3, 3), activation='relu', input_shape=(28, 28, 1)),
+    MaxPooling2D(pool_size=(2, 2)),
+    Conv2D(64, (3, 3), activation='relu'),
+    MaxPooling2D(pool_size=(2, 2)),
+    Flatten(),
+    Dense(128, activation='relu'),
+    Dropout(0.5),
+    Dense(10, activation='softmax')  
+])
+
+
+model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+
+history = model.fit(train_data, train_labels, epochs=10, batch_size=32, validation_data=(test_data, test_labels))
+
+test_loss, test_acc = model.evaluate(test_data, test_labels, verbose=2)
+print(f"Test accuracy: {test_acc}")
+
+
+import numpy as np
+predictions = model.predict(test_data[:5])
+
+for i in range(5):
+    print(f"Predicted: {np.argmax(predictions[i])}, Actual: {np.argmax(test_labels[i])}")
